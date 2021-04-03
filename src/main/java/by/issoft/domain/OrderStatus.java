@@ -3,7 +3,6 @@ package by.issoft.domain;
 public enum OrderStatus {
     ACCEPT("Accept"),
     PENDING("Pending"),
-    DELAYED("Delayed"),
     COMPLETED("Completed"),
     DECLINED("Declined");
 

@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class UserService {
-    Logger logger = LoggerFactory.getLogger(UserService.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     private final UserValidator userValidator;
 
@@ -29,4 +29,21 @@ public class UserService {
         }
         return user;
     }
+/*
+    public void removeOrderByID(User user, UUID orderId){
+        OrderService orderService = new OrderService(new OrderStorage(), new OrderItemValidator());
+        List<Order> userOrders = orderService.loadAllByUserId(user);
+        logger.debug("Loaded " + userOrders.size() + " orders belongs to user " + user.getUserID());
+        for (Order order: userOrders) {
+            if (order.getOrderId().equals(orderId)){
+                userOrders.remove(order);
+                logger.debug("Successfully removed order " + orderId);
+                user.setBalance(orderService.);
+            }else {
+                logger.debug("Order not found");
+            }
+        }
+    }
+
+*/
 }

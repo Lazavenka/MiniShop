@@ -8,6 +8,9 @@ public class OrderItemValidator {
         if (item.getName() == null) {
             return false;
         }
+        if(item.getTotalCost() < 0){
+            return false;
+        }
         return true;
     }
 }

@@ -1,25 +1,29 @@
 package by.issoft.domain;
 
-import java.sql.Date;
+import java.io.Serializable;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class Order {
-    private final List<OrderItem> orders = new ArrayList<>();
+public class Order implements Serializable {
+    private final List<OrderItem> orderItems = new ArrayList<>();
     private OrderStatus orderStatus;
 
-    private final UUID orderId;
+    private final transient UUID orderId;
     private final UUID userID;
     private Date date;
-    private String address;
+    private String deliveryAddress;
 
-    public Order(User user, Date date, String address){
+    public Order(User user) {
         this.userID = user.getUserID();
         this.orderId = UUID.randomUUID();
         this.orderStatus = OrderStatus.PENDING;
-        this.date = date;
-        this.address = address;
+    }
+    public Order(User user, UUID orderId) {
+        this.userID = user.getUserID();
+        this.orderId = orderId;
+        this.orderStatus = OrderStatus.PENDING;
     }
 
     public void setOrderStatus(OrderStatus orderStatus) {
@@ -30,8 +34,8 @@ public class Order {
         return orderStatus;
     }
 
-    public List<OrderItem> getOrders() {
-        return orders;
+    public List<OrderItem> getOrderItems() {
+        return orderItems;
     }
 
     public UUID getOrderId() {
@@ -46,7 +50,30 @@ public class Order {
         return date;
     }
 
-    public String getAddress() {
-        return address;
+    public String getDeliveryAddress() {
+        return deliveryAddress;
+    }
+
+    public void setDeliveryAddress(String deliveryAddress) {
+        this.deliveryAddress = deliveryAddress;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder orderItemsString = new StringBuilder();
+        int totalCost = 0;
+        for (OrderItem item : orderItems) {
+            orderItemsString.append(item).append("\n");
+            totalCost += item.getTotalCost();
+        }
+        return "Order #" + orderId + ". Delivery address - " + deliveryAddress + ". Date - " + date.toString() +
+                "\nList of items in order:\n" + orderItemsString.toString() +
+                "Order status: " + orderStatus +
+                "\nTotal cost: " + totalCost + "\n";
+
     }
 }

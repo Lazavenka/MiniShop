@@ -1,12 +1,15 @@
 package by.issoft.domain;
 
+import com.google.common.base.Preconditions;
+
+import java.io.Serializable;
 import java.util.UUID;
 
-public class OrderItem {
+public class OrderItem implements Serializable {
     private final int cost;
     private int count;
     private final String name;
-    private final UUID itemID;
+    private final transient UUID itemID;
 
     public OrderItem(int cost, int count, String name) {
         this.cost = cost;

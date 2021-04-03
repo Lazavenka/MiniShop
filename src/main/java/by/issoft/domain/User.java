@@ -1,5 +1,6 @@
 package by.issoft.domain;
 
+import java.util.List;
 import java.util.UUID;
 
 public class User {
@@ -8,11 +9,18 @@ public class User {
     private final String lastName;
 
     private int balance;
+    private List<UUID> orderIDs;
 
     public User(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.userID = UUID.randomUUID();
+    }
+
+    public User(String firstName, String lastName, UUID userID) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.userID = userID;
     }
 
     public int getBalance() {
@@ -23,7 +31,7 @@ public class User {
         this.balance = balance;
     }
 
-    public UUID getUserID(){
+    public UUID getUserID() {
         return userID;
     }
 
@@ -35,8 +43,12 @@ public class User {
         return lastName;
     }
 
+    public List<UUID> getOrderIDs() {
+        return orderIDs;
+    }
+
     @Override
     public String toString() {
-        return firstName + " " + lastName;
+        return "User id: " + userID + " -> " + firstName + " " + lastName + ". Balance: " + balance;
     }
 }

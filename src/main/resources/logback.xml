@@ -11,11 +11,11 @@
 
     <appender name="FILE"
               class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>binarySearcher.log</file>
+        <file>miniShop.log</file>
         <rollingPolicy
                 class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
-            <fileNamePattern>binarySearcher.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>miniShop.%d{yyyy-MM-dd}.log</fileNamePattern>
 
             <!-- Храним файлы логов 10 дней -->
             <maxHistory>10</maxHistory>
