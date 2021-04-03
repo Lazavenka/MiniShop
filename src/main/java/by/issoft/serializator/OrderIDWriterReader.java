@@ -40,7 +40,7 @@ public class OrderIDWriterReader {
     public static List<String> readAllIDs(){
         List<String> orderIDs = new ArrayList<>();
         try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader("resources/OrderIDs.txt"));
+            BufferedReader bufferedReader = new BufferedReader(new FileReader("./src/main/resources/OrderIDs.txt"));
             orderIDs = bufferedReader.lines().collect(Collectors.toList());
             logger.debug("Load "+orderIDs.size()+" entries.");
         } catch (FileNotFoundException e) {

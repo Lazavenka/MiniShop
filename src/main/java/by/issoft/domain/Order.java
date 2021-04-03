@@ -10,7 +10,7 @@ public class Order implements Serializable {
     private final List<OrderItem> orderItems = new ArrayList<>();
     private OrderStatus orderStatus;
 
-    private final transient UUID orderId;
+    private final UUID orderId;
     private final UUID userID;
     private Date date;
     private String deliveryAddress;

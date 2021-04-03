@@ -9,7 +9,7 @@ public class OrderItem implements Serializable {
     private final int cost;
     private int count;
     private final String name;
-    private final transient UUID itemID;
+    private final UUID itemID;
 
     public OrderItem(int cost, int count, String name) {
         this.cost = cost;

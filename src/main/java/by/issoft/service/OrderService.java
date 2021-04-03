@@ -48,9 +48,19 @@ public class OrderService {
 
     }
 
+    private boolean isOrderBelongToUser(Order order, User user) {
+        if (order.getUserID().equals(user.getUserID())) {
+            logger.debug("Order " + order.getOrderId() + " belongs to user " + user.getUserID());
+            return true;
+        } else {
+            logger.debug("Order " + order.getOrderId() + " is not belongs to user " + user.getUserID());
+            return false;
+        }
+    }
+
     public String placeOrder(Order order, User user) {
         String success = null;
-        if (user.getBalance() >= getTotalCost(order)) {
+        if (isOrderBelongToUser(order, user) && user.getBalance() >= getTotalCost(order)) {
             order.setOrderStatus(OrderStatus.ACCEPT);
             logger.debug("User " + user.getUserID() + " has money. Order status is " + OrderStatus.ACCEPT);
             success = orderStorage.saveOrder(order);
@@ -67,7 +77,7 @@ public class OrderService {
     public boolean sendOrderToUser(Order order, User user) {
         boolean success = false;
         final int userBalance = user.getBalance();
-        if (order.getOrderStatus().equals(OrderStatus.ACCEPT)) {
+        if (isOrderBelongToUser(order, user) && order.getOrderStatus().equals(OrderStatus.ACCEPT)) {
             user.setBalance(userBalance - getTotalCost(order));
             logger.debug("User balance changed from " + userBalance + " to " + user.getBalance());
             order.setOrderStatus(OrderStatus.COMPLETED);
