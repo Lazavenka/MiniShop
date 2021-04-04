@@ -4,7 +4,7 @@ import by.issoft.domain.User;
 
 public class UserValidator {
 
-    public boolean validateUser(User user){
+    public boolean isValid(User user){
         if(user.getFirstName()==null){
             return false;
         }

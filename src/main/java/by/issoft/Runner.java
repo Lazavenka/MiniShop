@@ -1,16 +1,14 @@
 package by.issoft;
 
 import by.issoft.domain.Order;
-import by.issoft.domain.OrderItem;
 import by.issoft.domain.User;
 import by.issoft.service.OrderItemValidator;
 import by.issoft.service.OrderService;
 import by.issoft.service.UserService;
 import by.issoft.service.UserValidator;
 import by.issoft.storage.OrderStorage;
-import by.issoft.testData.TestOrderItemSamples;
-import by.issoft.testData.TestOrderSamples;
-import by.issoft.testData.TestUserSamples;
+import by.issoft.testDataGenerators.TestOrderSamples;
+import by.issoft.testDataGenerators.TestUserSamples;
 
 import java.util.List;
 import java.util.UUID;

@@ -16,7 +16,10 @@ public class OrderStorage {
     //return filepath of Order
     public String findOrderFilePathByID(String id) {
         String filepath = null;
+
+        logger.debug("Method findOrderFilePathByID(String id) call readAllIDs()");
         List<String> allOrdersIDs = readAllIDs();
+
         for (String orderID : allOrdersIDs) {
             if (orderID.equals(id)) {
                 return "./src/main/resources/orders_data/" + orderID + ".txt";
@@ -33,19 +36,20 @@ public class OrderStorage {
         success = writeNewOrderIDToFile(order);
         if (success) {
             logger.debug("Order " + order.getOrderId() + " successfully saved.");
+            return order.getOrderId().toString();
         } else {
-            logger.debug("Something wrong. Order was not saved.");
+            logger.debug("Something wrong. Order was not saved: " +success);
+            return null;
         }
-        return "saved"; //??????
     }
 
     public Order loadOrder(String id) {
         Order order;
         order = deserialization(findOrderFilePathByID(id));
-        if (order == null) {
-            logger.debug("Order is not load.");
+        if (order != null) {
+            logger.debug("Order " + id + " successful loaded!");
         } else {
-            logger.debug("Order " + id + "successful loaded!");
+            logger.debug("Order is not load.");
         }
         return order;
     }

@@ -1,18 +1,15 @@
 package by.issoft.domain;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class Order implements Serializable {
-    private final List<OrderItem> orderItems = new ArrayList<>();
+    private List<OrderItem> orderItems = new ArrayList<>();
     private OrderStatus orderStatus;
 
     private final UUID orderId;
     private final UUID userID;
-    private Date date;
+    private String date;
     private String deliveryAddress;
 
     public Order(User user) {
@@ -46,7 +43,7 @@ public class Order implements Serializable {
         return userID;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
@@ -54,12 +51,29 @@ public class Order implements Serializable {
         return deliveryAddress;
     }
 
+    public void setOrderItems(List<OrderItem> orderItems) {
+        this.orderItems = orderItems;
+    }
+
     public void setDeliveryAddress(String deliveryAddress) {
         this.deliveryAddress = deliveryAddress;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Order order = (Order) o;
+        return Objects.equals(orderItems, order.orderItems) && orderStatus == order.orderStatus && Objects.equals(orderId, order.orderId) && Objects.equals(userID, order.userID) && Objects.equals(date, order.date) && Objects.equals(deliveryAddress, order.deliveryAddress);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(orderItems, orderStatus, orderId, userID, date, deliveryAddress);
     }
 
     @Override

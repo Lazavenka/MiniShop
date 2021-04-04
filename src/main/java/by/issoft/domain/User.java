@@ -1,11 +1,12 @@
 package by.issoft.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class User {
     private final UUID userID;
-    private final String firstName;
+    private String firstName;
     private final String lastName;
 
     private int balance;
@@ -15,12 +16,14 @@ public class User {
         this.firstName = firstName;
         this.lastName = lastName;
         this.userID = UUID.randomUUID();
+        this.orderIDs = new ArrayList<>();
     }
 
     public User(String firstName, String lastName, UUID userID) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.userID = userID;
+        this.orderIDs = new ArrayList<>();
     }
 
     public int getBalance() {
@@ -39,6 +42,9 @@ public class User {
         return firstName;
     }
 
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
     public String getLastName() {
         return lastName;
     }
@@ -47,6 +53,9 @@ public class User {
         return orderIDs;
     }
 
+    public void setOrderIDs(List<UUID> orderIDs) {
+        this.orderIDs = orderIDs;
+    }
     @Override
     public String toString() {
         return "User id: " + userID + " -> " + firstName + " " + lastName + ". Balance: " + balance;

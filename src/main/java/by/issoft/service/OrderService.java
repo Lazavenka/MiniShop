@@ -28,12 +28,15 @@ public class OrderService {
     }
 
     //додумать логику
-    public void addOrderItem(Order order, OrderItem item) {
+    public boolean addOrderItem(Order order, OrderItem item) {
         if (orderItemValidator.isValidItem(item)) {
             order.getOrderItems().add(item);
+            orderStorage.saveOrder(order);
             logger.debug("Order item #" + item.getItemID() + " successfully added to order #" + order.getOrderId());
+            return true;
         } else {
             logger.debug("Item " + item.getItemID() + " is invalid. Can't add to the order.");
+            return false;
         }
     }
 
@@ -41,11 +44,11 @@ public class OrderService {
     public void removeOrderItem(Order order, OrderItem item) {
         if (order.getOrderItems().contains(item)) {
             order.getOrderItems().remove(item);
+            orderStorage.saveOrder(order);
             logger.debug("Item " + item.getItemID() + " was removed from order " + order.getOrderId());
         } else {
             logger.debug("Order is not contain item " + item.getItemID());
         }
-
     }
 
     private boolean isOrderBelongToUser(Order order, User user) {
@@ -69,7 +72,7 @@ public class OrderService {
             }
         } else {
             order.setOrderStatus(OrderStatus.DECLINED);
-            logger.debug("User " + user.getUserID() + "is nischebrod. Order status is " + OrderStatus.DECLINED);
+            logger.debug("User " + user.getUserID() + "is incorrect. Order status is " + OrderStatus.DECLINED);
         }
         return success;
     }
@@ -81,6 +84,7 @@ public class OrderService {
             user.setBalance(userBalance - getTotalCost(order));
             logger.debug("User balance changed from " + userBalance + " to " + user.getBalance());
             order.setOrderStatus(OrderStatus.COMPLETED);
+            orderStorage.saveOrder(order);
             logger.debug("Order " + order.getOrderId() + " is completed now. Status changed.");
             success = true;
         }
@@ -90,6 +94,7 @@ public class OrderService {
     public List<Order> loadAllByUserId(User user) {
         final UUID currentUserId = user.getUserID();
         List<Order> orders = new ArrayList<>();
+        logger.debug("Method loadAllByUserId(User user) call readAllIDs()");
         List<String> orderIDs = OrderIDWriterReader.readAllIDs();
         for (String orderID : orderIDs) {
             Order currentOrder = orderStorage.loadOrder(orderID);
@@ -101,7 +106,7 @@ public class OrderService {
         if (orders.isEmpty()) {
             logger.debug("No orders loaded.");
         } else {
-            logger.debug("Loaded " + orders.size() + " entries.");
+            logger.debug("Loaded " + orders.size() + " orders from files.");
         }
         return orders;
     }

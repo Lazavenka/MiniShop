@@ -1,9 +1,11 @@
-package by.issoft.testData;
+package by.issoft.testDataGenerators;
 
 import by.issoft.domain.Order;
+import by.issoft.domain.OrderItem;
 import by.issoft.domain.User;
 
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class TestOrderSamples {
@@ -16,21 +18,23 @@ public class TestOrderSamples {
                 + random.nextInt(200);
     }
     private static void fillOrderWithRandomItems(Order order, int count){
+        List<OrderItem> items = order.getOrderItems();
         for (int i = 0; i < count; i++) {
-            order.getOrderItems().add(TestOrderItemSamples.generateOrderItem());
+            items.add(TestOrderItemSamples.generateOrderItem());
         }
+        order.setOrderItems(items);
     }
     public static Order geterateOrder(){
         Order order = new Order(TestUserSamples.generateUser());
         order.setDeliveryAddress(generateAddress());
-        order.setDate(new Date());
+        order.setDate(new Date().toString());
         fillOrderWithRandomItems(order, 5);
         return order;
     }
     public static Order geterateOrder(User user){
         Order order = new Order(user);
         order.setDeliveryAddress(generateAddress());
-        order.setDate(new Date());
+        order.setDate(new Date().toString());
         fillOrderWithRandomItems(order, 5);
         return order;
     }

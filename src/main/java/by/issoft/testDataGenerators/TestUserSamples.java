@@ -1,4 +1,4 @@
-package by.issoft.testData;
+package by.issoft.testDataGenerators;
 
 import by.issoft.domain.User;
 

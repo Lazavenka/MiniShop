@@ -1,7 +1,5 @@
 package by.issoft.domain;
 
-import com.google.common.base.Preconditions;
-
 import java.io.Serializable;
 import java.util.UUID;
 
@@ -16,6 +14,12 @@ public class OrderItem implements Serializable {
         this.count = count;
         this.name = name;
         this.itemID = UUID.randomUUID();
+    }
+    public OrderItem(int cost, int count, String name, UUID uuid) {
+        this.cost = cost;
+        this.count = count;
+        this.name = name;
+        this.itemID = uuid;
     }
 
     public UUID getItemID() {

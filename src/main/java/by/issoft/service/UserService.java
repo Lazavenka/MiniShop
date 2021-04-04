@@ -14,21 +14,30 @@ public class UserService {
         this.userValidator = userValidator;
     }
 
-    public void addBalanceToUser(User user, int balance) {
-        Preconditions.checkArgument(balance >= 0, "Balance must be positive!");
-        Preconditions.checkArgument(userValidator.validateUser(user), "User is invalid!");
-        user.setBalance(user.getBalance() + balance);
+    public String createUser(User user) {
+        if (userValidator.isValid(user)) {
+            logger.debug("That's fine. User is valid. There are some logic to create new user and store it in DB.");
+            return user.getUserID().toString();
+        } else {
+            logger.debug("User is invalid, can not create new user. Check lastname or firstname.");
+            return null;
+        }
     }
 
-    public User createUser(User user){
-        if (!userValidator.validateUser(user)){
-            logger.debug("User is invalid, can not create new user. Check lastname or firstname.");
+    public boolean addBalanceToUser(User user, int balance) {
+        if (balance>=0){
+            user.setBalance(user.getBalance() + balance);
+            return true;
+        }else {
+            throw new UnsupportedOperationException("Not implement yet");
         }
-        else {
-            logger.debug("That's fine. User is valid. There is some logic to create new user and store it in DB.");
-        }
-        return user;
     }
+
+
+    /*TODO
+    implement method addValidOrderID(Order order) that add orderID to User
+    List<UUID> orderIDs
+     */
 /*
     public void removeOrderByID(User user, UUID orderId){
         OrderService orderService = new OrderService(new OrderStorage(), new OrderItemValidator());

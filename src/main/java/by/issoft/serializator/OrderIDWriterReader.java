@@ -42,6 +42,7 @@ public class OrderIDWriterReader {
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader("./src/main/resources/OrderIDs.txt"));
             orderIDs = bufferedReader.lines().collect(Collectors.toList());
+            logger.debug("Method readAllIDs() ->>>>>>>>>");
             logger.debug("Load "+orderIDs.size()+" entries.");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
