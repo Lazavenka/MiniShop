@@ -1,10 +1,9 @@
 package by.issoft.service;
 
 import by.issoft.domain.User;
+import by.issoft.storage.OrderStorage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 import static by.issoft.domain.data.TestUserSamples.validUser;
 import static org.mockito.Mockito.mock;
@@ -18,11 +17,13 @@ class UserServiceTest {
     private User user;
     private UserService userService;
     private UserValidator userValidator;
+    private OrderStorage orderStorage;
 
     @BeforeEach
     public void before(){
         userValidator = mock(UserValidator.class);
-        userService = new UserService(userValidator);
+        orderStorage = mock(OrderStorage.class);
+        userService = new UserService(userValidator, orderStorage);
     }
     @Test
     void createUser() {
@@ -49,14 +50,14 @@ class UserServiceTest {
         assertNull(id);
     }
     @Test
-    void addBalanceToUser() {
+    void setCorrectBalanceToUser() {
         //given
         user = validUser();
         final int balance = 1000;
         user.setBalance(balance);
         final int salary = 500;
 
-        userService.addBalanceToUser(user, salary);
+        userService.changeUserBalance(user, salary);
         //expect
         assertEquals(balance+salary, user.getBalance());
 
@@ -65,7 +66,7 @@ class UserServiceTest {
 
     }
     @Test
-    void addNegativeBalanceToUser() {
+    void setNegativeBalanceToUser() {
         //given
         user = validUser();
         final int balance = 1000;
@@ -74,7 +75,7 @@ class UserServiceTest {
         final int salary = -1500;
 
         //expect
-        assertThrows(UnsupportedOperationException.class, ()->userService.addBalanceToUser(user,salary));
+        assertFalse(userService.changeUserBalance(user,salary));
     }
 
 }

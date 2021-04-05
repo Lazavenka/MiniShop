@@ -1,10 +1,11 @@
 package by.issoft.domain;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class User {
+public class User implements Serializable {
     private final UUID userID;
     private String firstName;
     private final String lastName;

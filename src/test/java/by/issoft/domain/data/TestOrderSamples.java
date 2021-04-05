@@ -3,6 +3,7 @@ package by.issoft.domain.data;
 import by.issoft.domain.Order;
 import by.issoft.domain.OrderItem;
 import by.issoft.domain.User;
+import by.issoft.storage.OrderItemStorage;
 import by.issoft.testDataGenerators.TestOrderItemSamples;
 import by.issoft.testDataGenerators.TestUserSamples;
 import org.mockito.internal.matchers.Or;
@@ -14,6 +15,7 @@ import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class TestOrderSamples {
+    private final static OrderItemStorage orderItemStorage = new OrderItemStorage();
     private static final String[] addresses = {"Lenina str. ", "Kizhevatova str. ", "Kalvariyskaya str. ",
             "Lenina str. ", "Kozlova str. ", "Krasnaya str. ", "Partyzanskiy ave. ", "Yakuba Kolasa str. ",
             "Khoruzhei str. ", "Kul'man str. "};
@@ -23,9 +25,11 @@ public class TestOrderSamples {
                 + random.nextInt(200);
     }
     private static void fillOrderWithRandomItems(Order order, int count){
-        List<OrderItem> items = order.getOrderItems();
+        List<UUID> items = order.getOrderItems();
         for (int i = 0; i < count; i++) {
-            items.add(TestOrderItemSamples.generateOrderItem());
+            OrderItem orderItem = TestOrderItemSamples.generateOrderItem();
+            orderItemStorage.saveOrderItem(orderItem);
+            items.add(orderItem.getItemID());
         }
         order.setOrderItems(items);
     }
@@ -48,8 +52,10 @@ public class TestOrderSamples {
         Order order = new Order(user, UUID.fromString("05af75d6-6a1e-4e8a-acee-dde8ac7f36a9"));
         order.setDeliveryAddress("Abstract str. 42 42");
         order.setDate("9 august 2020");
-        List<OrderItem> items = new ArrayList<>();
-        items.add(by.issoft.domain.data.TestOrderItemSamples.validOrderItem());
+        List<UUID> items = new ArrayList<>();
+        OrderItem orderItem = by.issoft.domain.data.TestOrderItemSamples.validOrderItem();
+        orderItemStorage.saveOrderItem(orderItem);
+        items.add(orderItem.getItemID());
         order.setOrderItems(items);
         return order;
     }

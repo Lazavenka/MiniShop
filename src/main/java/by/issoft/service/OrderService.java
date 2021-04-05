@@ -5,6 +5,7 @@ import by.issoft.domain.OrderItem;
 import by.issoft.domain.OrderStatus;
 import by.issoft.domain.User;
 import by.issoft.serializator.OrderIDWriterReader;
+import by.issoft.storage.OrderItemStorage;
 import by.issoft.storage.OrderStorage;
 
 import org.slf4j.Logger;
@@ -19,31 +20,34 @@ public class OrderService {
 
     private final OrderStorage orderStorage;
     private final OrderItemValidator orderItemValidator;
+    private final OrderItemService orderItemService;
 
     public OrderService(OrderStorage orderStorage,
-                        OrderItemValidator orderItemValidator) {
+                        OrderItemValidator orderItemValidator,
+                        OrderItemService orderItemService) {
         this.orderStorage = orderStorage;
         this.orderItemValidator = orderItemValidator;
-
+        this.orderItemService = orderItemService;
     }
 
     //додумать логику
-    public boolean addOrderItem(Order order, OrderItem item) {
-        if (orderItemValidator.isValidItem(item)) {
-            order.getOrderItems().add(item);
+    public boolean addOrderItem(Order order, OrderItem orderItem) {
+        if (orderItemValidator.isValidItem(orderItem)) {
+            order.getOrderItems().add(orderItem.getItemID());
+            orderItemService.createOrderItem(orderItem);
             orderStorage.saveOrder(order);
-            logger.debug("Order item #" + item.getItemID() + " successfully added to order #" + order.getOrderId());
+            logger.debug("Order item #" + orderItem.getItemID() + " successfully added to order #" + order.getOrderId());
             return true;
         } else {
-            logger.debug("Item " + item.getItemID() + " is invalid. Can't add to the order.");
+            logger.debug("Item " + orderItem.getItemID() + " is invalid. Can't add to the order.");
             return false;
         }
     }
 
-    //тоже додумать логику
+    //тоже додумать логику. пока удаляет UUID из order но serialized OrderItem остается. ну и ладно, пока норм
     public void removeOrderItem(Order order, OrderItem item) {
-        if (order.getOrderItems().contains(item)) {
-            order.getOrderItems().remove(item);
+        if (order.getOrderItems().contains(item.getItemID())) {
+            order.getOrderItems().remove(item.getItemID());
             orderStorage.saveOrder(order);
             logger.debug("Item " + item.getItemID() + " was removed from order " + order.getOrderId());
         } else {
@@ -62,27 +66,28 @@ public class OrderService {
     }
 
     public String placeOrder(Order order, User user) {
-        String success = null;
-        if (isOrderBelongToUser(order, user) && user.getBalance() >= getTotalCost(order)) {
+        String orderID = null;
+        final int userBalance = user.getBalance();
+        final int orderCost = getTotalCost(order);
+        if (isOrderBelongToUser(order, user) && userBalance >= orderCost) {
             order.setOrderStatus(OrderStatus.ACCEPT);
-            logger.debug("User " + user.getUserID() + " has money. Order status is " + OrderStatus.ACCEPT);
-            success = orderStorage.saveOrder(order);
-            if (success != null) {
+            logger.debug("Order is correct, " + user.getUserID() + " has money. Order status is " + OrderStatus.ACCEPT);
+            user.setBalance(userBalance - orderCost); //userService.changeUserBalance(user, 0 - orderCost);
+            logger.debug("User balance changed from " + userBalance + " to " + user.getBalance());
+            orderID = orderStorage.saveOrder(order);
+            if (orderID != null) {
                 logger.debug("Order " + order.getOrderId() + " is saved to DataBase now.");
             }
         } else {
             order.setOrderStatus(OrderStatus.DECLINED);
             logger.debug("User " + user.getUserID() + "is incorrect. Order status is " + OrderStatus.DECLINED);
         }
-        return success;
+        return orderID;
     }
 
     public boolean sendOrderToUser(Order order, User user) {
         boolean success = false;
-        final int userBalance = user.getBalance();
         if (isOrderBelongToUser(order, user) && order.getOrderStatus().equals(OrderStatus.ACCEPT)) {
-            user.setBalance(userBalance - getTotalCost(order));
-            logger.debug("User balance changed from " + userBalance + " to " + user.getBalance());
             order.setOrderStatus(OrderStatus.COMPLETED);
             orderStorage.saveOrder(order);
             logger.debug("Order " + order.getOrderId() + " is completed now. Status changed.");
@@ -90,18 +95,15 @@ public class OrderService {
         }
         return success;
     }
-
-    public List<Order> loadAllByUserId(User user) {
-        final UUID currentUserId = user.getUserID();
+    public List<Order> loadAllByUserID(User user){
+        final List<UUID> orderIDs = user.getOrderIDs();
         List<Order> orders = new ArrayList<>();
-        logger.debug("Method loadAllByUserId(User user) call readAllIDs()");
-        List<String> orderIDs = OrderIDWriterReader.readAllIDs();
-        for (String orderID : orderIDs) {
-            Order currentOrder = orderStorage.loadOrder(orderID);
-            if (currentOrder.getUserID().equals(currentUserId)) {
-                orders.add(currentOrder);
-                logger.debug("Find order #" + currentOrder.getOrderId() + " and add entry to List.");
-            }
+        if (orderIDs == null || orderIDs.isEmpty()){
+            return orders;
+        }
+        for (UUID orderID: orderIDs){
+            Order loadedOrder = orderStorage.loadOrder(orderID.toString());
+            orders.add(loadedOrder);
         }
         if (orders.isEmpty()) {
             logger.debug("No orders loaded.");
@@ -111,13 +113,13 @@ public class OrderService {
         return orders;
     }
 
-    private int getTotalCost(Order order) {
-        final List<OrderItem> orders = order.getOrderItems();
-        int totalCost = 0;
-        for (OrderItem item : orders) {
-            totalCost += item.getTotalCost();
+    public int getTotalCost(Order order) {
+        final List<UUID> orderItemIDs = order.getOrderItems();
+        int totalOrderCost = 0;
+        for (UUID item : orderItemIDs) {
+            totalOrderCost += orderItemService.getTotalCostOrderItem(item);
         }
-        return totalCost;
+        return totalOrderCost;
     }
 
 

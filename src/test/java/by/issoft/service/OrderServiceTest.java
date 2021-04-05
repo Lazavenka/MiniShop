@@ -7,6 +7,7 @@ import by.issoft.domain.User;
 import by.issoft.domain.data.TestOrderItemSamples;
 import by.issoft.domain.data.TestOrderSamples;
 import by.issoft.domain.data.TestUserSamples;
+import by.issoft.storage.OrderItemStorage;
 import by.issoft.storage.OrderStorage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,12 +37,14 @@ class OrderServiceTest {
     private OrderStorage orderStorage;
     @Mock
     private OrderItemValidator orderItemValidator;
-
+    @Mock
+    private OrderItemService orderItemService;
     @BeforeEach
     public void before(){
         MockitoAnnotations.initMocks(this);
 
-        orderService = new OrderService(orderStorage, orderItemValidator);
+        orderService = new OrderService(orderStorage, orderItemValidator,
+                orderItemService);
     }
 
     @Test

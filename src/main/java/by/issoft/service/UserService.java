@@ -1,7 +1,8 @@
 package by.issoft.service;
 
+import by.issoft.domain.Order;
 import by.issoft.domain.User;
-import com.google.common.base.Preconditions;
+import by.issoft.storage.OrderStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,9 +10,11 @@ public class UserService {
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     private final UserValidator userValidator;
+    private final OrderStorage orderStorage;
 
-    public UserService(UserValidator userValidator) {
+    public UserService(UserValidator userValidator, OrderStorage orderStorage) {
         this.userValidator = userValidator;
+        this.orderStorage = orderStorage;
     }
 
     public String createUser(User user) {
@@ -24,35 +27,23 @@ public class UserService {
         }
     }
 
-    public boolean addBalanceToUser(User user, int balance) {
-        if (balance>=0){
+    public boolean changeUserBalance(User user, int balance) {
+        final int newBalance = user.getBalance() + balance;
+        if (newBalance>=0){
             user.setBalance(user.getBalance() + balance);
             return true;
         }else {
-            throw new UnsupportedOperationException("Not implement yet");
+            logger.debug("Incorrect operation. User balance can't be negative.");
+            return false;
         }
     }
 
-
-    /*TODO
-    implement method addValidOrderID(Order order) that add orderID to User
-    List<UUID> orderIDs
-     */
-/*
-    public void removeOrderByID(User user, UUID orderId){
-        OrderService orderService = new OrderService(new OrderStorage(), new OrderItemValidator());
-        List<Order> userOrders = orderService.loadAllByUserId(user);
-        logger.debug("Loaded " + userOrders.size() + " orders belongs to user " + user.getUserID());
-        for (Order order: userOrders) {
-            if (order.getOrderId().equals(orderId)){
-                userOrders.remove(order);
-                logger.debug("Successfully removed order " + orderId);
-                user.setBalance(orderService.);
-            }else {
-                logger.debug("Order not found");
-            }
-        }
+    public boolean addOrder(User user, Order order) {
+        user.getOrderIDs().add(order.getOrderId());
+        final String orderID = orderStorage.saveOrder(order);
+        //updateUser in DB
+        logger.debug("Order #" + orderID + " successfully added to user #" + user.getUserID());
+        return true;
     }
 
-*/
 }

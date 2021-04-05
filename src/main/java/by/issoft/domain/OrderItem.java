@@ -36,6 +36,7 @@ public class OrderItem implements Serializable {
     public void setCount(int count){
         this.count = count;
     }
+
     @Override
     public String toString() {
         return "Order item ID: "+ itemID.toString() + " -> " + name + "." +

@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.*;
 
 public class Order implements Serializable {
-    private List<OrderItem> orderItems = new ArrayList<>();
+    private List<UUID> orderItems = new ArrayList<>();
     private OrderStatus orderStatus;
 
     private final UUID orderId;
@@ -31,7 +31,7 @@ public class Order implements Serializable {
         return orderStatus;
     }
 
-    public List<OrderItem> getOrderItems() {
+    public List<UUID> getOrderItems() {
         return orderItems;
     }
 
@@ -51,7 +51,7 @@ public class Order implements Serializable {
         return deliveryAddress;
     }
 
-    public void setOrderItems(List<OrderItem> orderItems) {
+    public void setOrderItems(List<UUID> orderItems) {
         this.orderItems = orderItems;
     }
 
@@ -68,7 +68,10 @@ public class Order implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Order order = (Order) o;
-        return Objects.equals(orderItems, order.orderItems) && orderStatus == order.orderStatus && Objects.equals(orderId, order.orderId) && Objects.equals(userID, order.userID) && Objects.equals(date, order.date) && Objects.equals(deliveryAddress, order.deliveryAddress);
+        return Objects.equals(orderItems, order.orderItems) && orderStatus ==
+                order.orderStatus && Objects.equals(orderId, order.orderId) &&
+                Objects.equals(userID, order.userID) && Objects.equals(date, order.date) &&
+                Objects.equals(deliveryAddress, order.deliveryAddress);
     }
 
     @Override
@@ -79,15 +82,12 @@ public class Order implements Serializable {
     @Override
     public String toString() {
         StringBuilder orderItemsString = new StringBuilder();
-        int totalCost = 0;
-        for (OrderItem item : orderItems) {
-            orderItemsString.append(item).append("\n");
-            totalCost += item.getTotalCost();
+        for (UUID orderItemID : orderItems) {
+            orderItemsString.append(orderItemID).append("\n");
         }
-        return "Order #" + orderId + ". Delivery address - " + deliveryAddress + ". Date - " + date.toString() +
+        return "Order #" + orderId + ". Delivery address - " + deliveryAddress + ". Date - " + date +
                 "\nList of items in order:\n" + orderItemsString.toString() +
-                "Order status: " + orderStatus +
-                "\nTotal cost: " + totalCost + "\n";
+                "Order status: " + orderStatus;
 
     }
 }
