@@ -23,7 +23,7 @@ public class OrderStorage {
             logger.debug("Order " + order.getOrderId() + " successfully saved.");
             return order.getOrderId().toString();
         } else {
-            logger.debug("Something wrong. Order was not saved: " +success);
+            logger.debug("Something wrong. Order was not saved: " + success);
             return null;
         }
     }

@@ -17,7 +17,7 @@ class OrderStorageTest {
     private final OrderStorage orderStorage = new OrderStorage();
 
     @Test
-    public void saveOrderTest(){
+    public void saveOrderTest() {
         //given
         User user = TestUserSamples.generateUserWithID(UUID.fromString("cfa12c0-9384-499b-ba5c-52c4bb5f1471"));
         final Order order = TestOrderSamples.geterateOrder(user, 5);
@@ -29,8 +29,6 @@ class OrderStorageTest {
         assertThat(id, is(not(nullValue())));
         final Order loadedOrder = orderStorage.loadOrder(id);
         assertEquals(loadedOrder, is(equalTo(order))); // по примеру пробовал что-то такое изобразить, не проходит тест
-
-
     }
 
 }

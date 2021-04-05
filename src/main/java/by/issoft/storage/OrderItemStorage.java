@@ -15,30 +15,31 @@ public class OrderItemStorage {
 
     private final String path = "./src/main/resources/orderItems_data/";
 
-    public String saveOrderItem(OrderItem orderItem){
+    public String saveOrderItem(OrderItem orderItem) {
         String orderID = null;
-        if(orderItemValidator.isValidItem(orderItem)){
+        if (orderItemValidator.isValidItem(orderItem)) {
             orderID = orderItem.getItemID().toString();
             serialization(orderItem);
-            logger.debug("Order item "+orderID+" successfully saved to storage.");
-        }else {
+            logger.debug("Order item " + orderID + " successfully saved to storage.");
+        } else {
             logger.debug("Order item is invalid. Can't save to storage.");
         }
         return orderID;
     }
 
-    public OrderItem loadOrderItem(String orderItemID){
+    public OrderItem loadOrderItem(String orderItemID) {
         OrderItem orderItem;
         orderItem = deserialization(getPathFromID(orderItemID));
-        if (orderItem!=null){
-            logger.debug("Order item "+orderItemID+" successfully loaded!");
+        if (orderItem != null) {
+            logger.debug("Order item " + orderItemID + " successfully loaded!");
             return orderItem;
-        }else {
-            logger.debug("Something wrong. Order item " +orderItemID+" not loaded!");
+        } else {
+            logger.debug("Something wrong. Order item " + orderItemID + " not loaded!");
             return null;
         }
     }
-    private String getPathFromID(String orderItemID){
+
+    private String getPathFromID(String orderItemID) {
         return path + orderItemID + ".txt";
     }
 }

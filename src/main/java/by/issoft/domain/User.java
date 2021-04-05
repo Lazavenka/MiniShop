@@ -46,6 +46,7 @@ public class User implements Serializable {
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
+
     public String getLastName() {
         return lastName;
     }
@@ -57,6 +58,7 @@ public class User implements Serializable {
     public void setOrderIDs(List<UUID> orderIDs) {
         this.orderIDs = orderIDs;
     }
+
     @Override
     public String toString() {
         return "User id: " + userID + " -> " + firstName + " " + lastName + ". Balance: " + balance;

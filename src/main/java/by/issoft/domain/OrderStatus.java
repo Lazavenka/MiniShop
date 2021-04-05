@@ -8,7 +8,7 @@ public enum OrderStatus {
 
     private final String title;
 
-    OrderStatus(String title){
+    OrderStatus(String title) {
         this.title = title;
     }
 

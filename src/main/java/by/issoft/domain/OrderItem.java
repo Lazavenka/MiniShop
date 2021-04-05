@@ -15,6 +15,7 @@ public class OrderItem implements Serializable {
         this.name = name;
         this.itemID = UUID.randomUUID();
     }
+
     public OrderItem(int cost, int count, String name, UUID uuid) {
         this.cost = cost;
         this.count = count;
@@ -33,14 +34,15 @@ public class OrderItem implements Serializable {
     public int getTotalCost() {
         return cost * count;
     }
-    public void setCount(int count){
+
+    public void setCount(int count) {
         this.count = count;
     }
 
     @Override
     public String toString() {
-        return "Order item ID: "+ itemID.toString() + " -> " + name + "." +
+        return "Order item ID: " + itemID.toString() + " -> " + name + "." +
                 " Count " + count + ", cost " + cost + "." +
-                " Total cost - "+ getTotalCost();
+                " Total cost - " + getTotalCost();
     }
 }

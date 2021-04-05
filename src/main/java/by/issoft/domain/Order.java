@@ -17,6 +17,7 @@ public class Order implements Serializable {
         this.orderId = UUID.randomUUID();
         this.orderStatus = OrderStatus.PENDING;
     }
+
     public Order(User user, UUID orderId) {
         this.userID = user.getUserID();
         this.orderId = orderId;

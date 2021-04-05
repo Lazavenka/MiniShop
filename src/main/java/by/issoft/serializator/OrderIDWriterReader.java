@@ -15,14 +15,14 @@ public class OrderIDWriterReader {
     public static boolean writeNewOrderIDToFile(Order order) {
         FileOutputStream fos = null;
         boolean success = false;
-        String id = order.getOrderId().toString()+"\n";
+        String id = order.getOrderId().toString() + "\n";
         byte[] idBytes;
         try {
             fos = new FileOutputStream("./src/main/resources/OrderIDs.txt", true);
             idBytes = id.getBytes();
             fos.write(idBytes);
             success = true;
-            logger.debug("Successfully write " +id + " to file.");
+            logger.debug("Successfully write " + id + " to file.");
         } catch (IOException e) {
             logger.debug("UnsupportedEncodingException." + e.toString());
             e.printStackTrace();
@@ -37,13 +37,14 @@ public class OrderIDWriterReader {
         }
         return success;
     }
-    public static List<String> readAllIDs(){
+
+    public static List<String> readAllIDs() {
         List<String> orderIDs = new ArrayList<>();
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader("./src/main/resources/OrderIDs.txt"));
             orderIDs = bufferedReader.lines().collect(Collectors.toList());
             logger.debug("Method readAllIDs() ->>>>>>>>>");
-            logger.debug("Load "+orderIDs.size()+" entries.");
+            logger.debug("Load " + orderIDs.size() + " entries.");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

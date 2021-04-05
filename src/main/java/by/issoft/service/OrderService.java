@@ -4,8 +4,6 @@ import by.issoft.domain.Order;
 import by.issoft.domain.OrderItem;
 import by.issoft.domain.OrderStatus;
 import by.issoft.domain.User;
-import by.issoft.serializator.OrderIDWriterReader;
-import by.issoft.storage.OrderItemStorage;
 import by.issoft.storage.OrderStorage;
 
 import org.slf4j.Logger;
@@ -19,27 +17,23 @@ public class OrderService {
     private static final Logger logger = LoggerFactory.getLogger(OrderService.class);
 
     private final OrderStorage orderStorage;
-    private final OrderItemValidator orderItemValidator;
     private final OrderItemService orderItemService;
 
     public OrderService(OrderStorage orderStorage,
-                        OrderItemValidator orderItemValidator,
                         OrderItemService orderItemService) {
         this.orderStorage = orderStorage;
-        this.orderItemValidator = orderItemValidator;
         this.orderItemService = orderItemService;
     }
 
     //додумать логику
     public boolean addOrderItem(Order order, OrderItem orderItem) {
-        if (orderItemValidator.isValidItem(orderItem)) {
-            order.getOrderItems().add(orderItem.getItemID());
-            orderItemService.createOrderItem(orderItem);
-            orderStorage.saveOrder(order);
-            logger.debug("Order item #" + orderItem.getItemID() + " successfully added to order #" + order.getOrderId());
+        final String orderItemID = orderItemService.createOrderItem(orderItem);
+        if (orderItemID != null) {
+            order.getOrderItems().add(UUID.fromString(orderItemID));
+            String orderID = orderStorage.saveOrder(order);
+            logger.debug("Order item #" + orderItemID + " successfully added to order #" + orderID);
             return true;
         } else {
-            logger.debug("Item " + orderItem.getItemID() + " is invalid. Can't add to the order.");
             return false;
         }
     }
@@ -95,13 +89,14 @@ public class OrderService {
         }
         return success;
     }
-    public List<Order> loadAllByUserID(User user){
+
+    public List<Order> loadAllByUserID(User user) {
         final List<UUID> orderIDs = user.getOrderIDs();
         List<Order> orders = new ArrayList<>();
-        if (orderIDs == null || orderIDs.isEmpty()){
+        if (orderIDs == null || orderIDs.isEmpty()) {
             return orders;
         }
-        for (UUID orderID: orderIDs){
+        for (UUID orderID : orderIDs) {
             Order loadedOrder = orderStorage.loadOrder(orderID.toString());
             orders.add(loadedOrder);
         }

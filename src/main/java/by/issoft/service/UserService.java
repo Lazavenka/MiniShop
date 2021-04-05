@@ -29,10 +29,10 @@ public class UserService {
 
     public boolean changeUserBalance(User user, int balance) {
         final int newBalance = user.getBalance() + balance;
-        if (newBalance>=0){
+        if (newBalance >= 0) {
             user.setBalance(user.getBalance() + balance);
             return true;
-        }else {
+        } else {
             logger.debug("Incorrect operation. User balance can't be negative.");
             return false;
         }

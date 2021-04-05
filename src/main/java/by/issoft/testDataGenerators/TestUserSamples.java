@@ -10,7 +10,7 @@ public class TestUserSamples {
             "Innokentiy", "Hanna", "Oksana", "Katya", "Sveta", "Elena", "Roksolyana"};
     private static final String[] lastNames = {"Petrovich", "Ivanko", "Stepanenko", "Vasilevich", "Davidovich", "Landau"};
 
-    public static User generateUser(){
+    public static User generateUser() {
         ThreadLocalRandom random = ThreadLocalRandom.current();
 
         User user = new User(firstNames[random.nextInt(firstNames.length - 1)],
@@ -18,7 +18,8 @@ public class TestUserSamples {
         user.setBalance(random.nextInt(10000));
         return user;
     }
-    public static User generateUserWithID(UUID id){
+
+    public static User generateUserWithID(UUID id) {
         ThreadLocalRandom random = ThreadLocalRandom.current();
 
         User user = new User(firstNames[random.nextInt(firstNames.length - 1)],

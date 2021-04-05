@@ -36,26 +36,24 @@ class OrderServiceTest {
     @Mock
     private OrderStorage orderStorage;
     @Mock
-    private OrderItemValidator orderItemValidator;
-    @Mock
     private OrderItemService orderItemService;
+
     @BeforeEach
-    public void before(){
+    public void before() {
         MockitoAnnotations.initMocks(this);
 
-        orderService = new OrderService(orderStorage, orderItemValidator,
-                orderItemService);
+        orderService = new OrderService(orderStorage, orderItemService);
     }
 
     @Test
-    void addOrderItem() {
+    void addValidOrderItem() {
         //given
         OrderItem item = validOrderItem();
         order = getValidOrder(validUser());
 
-        when(orderItemValidator.isValidItem(item)).thenReturn(true);
+        when(orderItemService.createOrderItem(item)).thenReturn(any());
 
-        assertThat(orderService.addOrderItem(order,item), is(true));
+        assertTrue(orderService.addOrderItem(order, item)); //????
     }
 
     @Test
@@ -77,6 +75,7 @@ class OrderServiceTest {
 
         assertThat(order.getOrderStatus(), is(OrderStatus.ACCEPT));
     }
+
     @Test
     void placeOrder_invalidBalance() {
         //given
@@ -87,9 +86,10 @@ class OrderServiceTest {
         final String orderID = order.getOrderId().toString();
 
         //expect
-        orderService.placeOrder(order,user);
+        orderService.placeOrder(order, user);
         assertThat(order.getOrderStatus(), is(OrderStatus.DECLINED));
     }
+
     @Test
     void placeOrder_notBelongsToUser() {
         //given
@@ -101,9 +101,10 @@ class OrderServiceTest {
         final String orderID = order.getOrderId().toString();
 
         //expect
-        orderService.placeOrder(order,otherUser);
+        orderService.placeOrder(order, otherUser);
         assertThat(order.getOrderStatus(), is(OrderStatus.DECLINED));
     }
+
     @Test
     void sendOrderToUser() {
         User validUser = validUser();
@@ -113,7 +114,7 @@ class OrderServiceTest {
         assertThat(order.getOrderStatus(), is(OrderStatus.PENDING));
 
         orderService.placeOrder(order, validUser);
-        orderService.sendOrderToUser(order,validUser);
+        orderService.sendOrderToUser(order, validUser);
         assertThat(order.getOrderStatus(), is(OrderStatus.COMPLETED));
     }
 }
