@@ -69,15 +69,12 @@ public class Order implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Order order = (Order) o;
-        return Objects.equals(orderItems, order.orderItems) && orderStatus ==
-                order.orderStatus && Objects.equals(orderId, order.orderId) &&
-                Objects.equals(userID, order.userID) && Objects.equals(date, order.date) &&
-                Objects.equals(deliveryAddress, order.deliveryAddress);
+        return orderId.equals(order.orderId) && userID.equals(order.userID);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(orderItems, orderStatus, orderId, userID, date, deliveryAddress);
+        return Objects.hash(orderId, userID);
     }
 
     @Override

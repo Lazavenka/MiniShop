@@ -8,9 +8,9 @@ import static by.issoft.serializator.OrderIDWriterReader.*;
 import static by.issoft.serializator.SerializatorOrders.*;
 
 public class OrderStorage {
-    Logger logger = LoggerFactory.getLogger(OrderStorage.class);
+    private final Logger logger = LoggerFactory.getLogger(OrderStorage.class);
 
-    public String findOrderFilePathByID(String id) {
+    public String generateFilePathFromID(String id) {
         String path = "./src/main/resources/orders_data/";
         return path + id + ".txt";
     }
@@ -30,7 +30,7 @@ public class OrderStorage {
 
     public Order loadOrder(String id) {
         Order order;
-        order = deserialization(findOrderFilePathByID(id));
+        order = deserialization(generateFilePathFromID(id));
         if (order != null) {
             logger.debug("Order " + id + " successful loaded!");
         } else {

@@ -33,15 +33,17 @@ class OrderServiceTest {
     private OrderService orderService;
     private Order order;
 
-    @Mock
     private OrderStorage orderStorage;
-    @Mock
+    private OrderItemStorage orderItemStorage;
+    private OrderItemValidator orderItemValidator;
     private OrderItemService orderItemService;
 
     @BeforeEach
     public void before() {
-        MockitoAnnotations.initMocks(this);
-
+        orderStorage = new OrderStorage();
+        orderItemValidator = new OrderItemValidator();
+        orderItemStorage = new OrderItemStorage();
+        orderItemService = new OrderItemService(orderItemStorage, orderItemValidator);
         orderService = new OrderService(orderStorage, orderItemService);
     }
 
@@ -51,9 +53,7 @@ class OrderServiceTest {
         OrderItem item = validOrderItem();
         order = getValidOrder(validUser());
 
-        when(orderItemService.createOrderItem(item)).thenReturn(any());
-
-        assertTrue(orderService.addOrderItem(order, item)); //????
+        assertTrue(orderService.addOrderItem(order, item));
     }
 
     @Test
@@ -71,7 +71,7 @@ class OrderServiceTest {
         //expect
         assertThat(order.getOrderStatus(), is(OrderStatus.PENDING));
 
-        when(orderService.placeOrder(order, user)).thenReturn(orderID);
+        orderService.placeOrder(order, user);
 
         assertThat(order.getOrderStatus(), is(OrderStatus.ACCEPT));
     }

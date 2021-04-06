@@ -13,8 +13,6 @@ public class OrderItemStorage {
 
     private final OrderItemValidator orderItemValidator = new OrderItemValidator();
 
-    private final String path = "./src/main/resources/orderItems_data/";
-
     public String saveOrderItem(OrderItem orderItem) {
         String orderID = null;
         if (orderItemValidator.isValidItem(orderItem)) {
@@ -40,6 +38,7 @@ public class OrderItemStorage {
     }
 
     private String getPathFromID(String orderItemID) {
+        String path = "./src/main/resources/orderItems_data/";
         return path + orderItemID + ".txt";
     }
 }

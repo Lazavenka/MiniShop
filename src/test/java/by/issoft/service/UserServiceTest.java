@@ -8,9 +8,6 @@ import org.junit.jupiter.api.Test;
 import static by.issoft.domain.data.TestUserSamples.validUser;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserServiceTest {
@@ -20,11 +17,12 @@ class UserServiceTest {
     private OrderStorage orderStorage;
 
     @BeforeEach
-    public void before(){
+    public void before() {
         userValidator = mock(UserValidator.class);
         orderStorage = mock(OrderStorage.class);
         userService = new UserService(userValidator, orderStorage);
     }
+
     @Test
     void createUser() {
         //given valid user
@@ -37,6 +35,7 @@ class UserServiceTest {
         //then
         assertEquals(id, user.getUserID().toString());
     }
+
     @Test
     void createUser_invalid() {
         //given invalid user
@@ -49,6 +48,7 @@ class UserServiceTest {
         //expect
         assertNull(id);
     }
+
     @Test
     void setCorrectBalanceToUser() {
         //given
@@ -57,14 +57,11 @@ class UserServiceTest {
         user.setBalance(balance);
         final int salary = 500;
 
-        userService.changeUserBalance(user, salary);
         //expect
-        assertEquals(balance+salary, user.getBalance());
-
-        //then
-
-
+        assertTrue(userService.changeUserBalance(user, salary));
+        assertEquals(balance + salary, user.getBalance());
     }
+
     @Test
     void setNegativeBalanceToUser() {
         //given
@@ -75,7 +72,7 @@ class UserServiceTest {
         final int salary = -1500;
 
         //expect
-        assertFalse(userService.changeUserBalance(user,salary));
+        assertFalse(userService.changeUserBalance(user, salary));
     }
 
 }
